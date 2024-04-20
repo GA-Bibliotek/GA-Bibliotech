@@ -7,7 +7,7 @@ import MySQLdb.cursors, re, hashlib
 app = Flask(__name__)
 
 # Change this to your secret key (it can be anything, it's for extra protection)
-app.secret_key = '1'
+app.secret_key = 'SCRUMDADDIES'
 
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = '80.212.175.9'
@@ -30,9 +30,9 @@ def login():
         username = request.form['username']
         password = request.form['password']
         # Retrieve the hashed password
-        # hash = password + app.secret_key
-        # hash = hashlib.sha1(hash.encode())
-        # password = hash.hexdigest()
+        hash = password + app.secret_key
+        hash = hashlib.sha1(hash.encode())
+        password = hash.hexdigest()
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM låner WHERE Epost = %s AND Passord = %s', (username, password,))
@@ -103,9 +103,9 @@ def register():
             msg = 'Please fill out the form!'
         else:
             # Hash the password
-            # hash = password + app.secret_key
-            # hash = hashlib.sha1(hash.encode())
-            # password = hash.hexdigest()
+            hash = password + app.secret_key
+            hash = hashlib.sha1(hash.encode())
+            password = hash.hexdigest()
             # Account doesn't exist, and the form data is valid, so insert the new account into the accounts table
             cursor.execute('''INSERT INTO låner VALUES 
                             (0, %s, %s, %s, %s, 0, %s)''',
